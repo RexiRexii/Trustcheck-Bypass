@@ -11,7 +11,7 @@ Literally paste the code, and initialize it
 ## Usage
 
 ```
-// Initialize your memcheck here
+// Initialize your memcheck before initializing your trustcheck bypass
 InitializeTrustcheck();
 ```
 
