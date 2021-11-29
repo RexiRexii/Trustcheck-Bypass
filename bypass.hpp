@@ -1,11 +1,11 @@
 void InitializeTrustcheck()
 {
 	DWORD EXECUTE;
-	const auto TRUSTCHECKJNZ = aslr(0x182194F);
+	const auto TRUSTCHECKJNZ = (0x182194F - 0x400000 + reinterpret_cast<std::uintptr_t>(GetModuleHandleA(0)));
 
-	VirtualProtect(reinterpret_cast<LPVOID>(TRUSTCHECKJNZ), 1, PAGE_EXECUTE_READWRITE, &EXECUTE);
+	VirtualProtect(reinterpret_cast<void*>(TRUSTCHECKJNZ), 1, PAGE_EXECUTE_READWRITE, &EXECUTE);
 	*reinterpret_cast<byte*>(TRUSTCHECKJNZ) = 0xEB;
-	VirtualProtect(reinterpret_cast<LPVOID>(TRUSTCHECKJNZ), 1, EXECUTE, &EXECUTE);
+	VirtualProtect(reinterpret_cast<void*>(TRUSTCHECKJNZ), 1, EXECUTE, &EXECUTE);
 }
 
 void RevertTrustcheck()
