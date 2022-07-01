@@ -1,21 +1,25 @@
-void InitializeTrustcheck()
-{
-	DWORD EXECUTE;
-	const auto TRUSTCHECKJNZ = (0x1ABE4AF - 0x400000 + reinterpret_cast<std::uintptr_t>(GetModuleHandleA(0)));
+#pragma once
+#include <Windows.h>
 
-	VirtualProtect(reinterpret_cast<void*>(TRUSTCHECKJNZ), 1, PAGE_EXECUTE_READWRITE, &EXECUTE);
-	*reinterpret_cast<byte*>(TRUSTCHECKJNZ) = 0xEB;
-	VirtualProtect(reinterpret_cast<void*>(TRUSTCHECKJNZ), 1, EXECUTE, &EXECUTE);
+#include <cstdint>
+#include <cstddef>
+
+// i dont even know why some retards decided to visit this repository from 2021, and decide to criticize it, how low can you even be?
+// i didnt update the address btw, just follow the guide i've put in readme and you should be fine
+// requires memcheck bypass
+
+template <typename addr = std::uintptr_t>
+constexpr std::uintptr_t aslr(const addr x) // omg, macros are bad so dont use it! -cumstain, around 2019 or 2020 idk
+{
+    return (x - 0x400000 + reinterpret_cast<const std::uintptr_t>(GetModuleHandleW(nullptr)));
 }
 
-void RevertTrustcheck()
+void bypass_trust_check()
 {
-	DWORD EXECUTE;
-	const auto TRUSTCHECKJNZ = (0x1ABE4AF - 0x400000 + reinterpret_cast<std::uintptr_t>(GetModuleHandleA(0)));
+        const auto patch_addr = aslr(0x1ABE4AF);
+	DWORD old;	
 
-	VirtualProtect(reinterpret_cast<void*>(TRUSTCHECKJNZ), 1, PAGE_EXECUTE_READWRITE, &EXECUTE);
-	*reinterpret_cast<byte*>(TRUSTCHECKJNZ) = 0x74;
-	VirtualProtect(reinterpret_cast<void*>(TRUSTCHECKJNZ), 1, EXECUTE, &EXECUTE);
+	VirtualProtect(reinterpret_cast<void*>(patch_addr), 1, PAGE_EXECUTE_READWRITE, &old);
+	*reinterpret_cast<std::uint8_t*>(patch_addr) = 0xEB;
+	VirtualProtect(reinterpret_cast<void*>(patch_addr), 1, old, &old);
 }
-
-// REQUIRES A MEMCHECK BYPASS, I SUGGEST YOU USE GOGO'S AUTOUPDATING MEMCHECK BYPASS AT: https://github.com/AmJayden/auto-updating-memcheck/tree/main/AUMB
