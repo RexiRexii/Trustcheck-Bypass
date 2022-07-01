@@ -8,15 +8,14 @@
 // i didnt update the address btw, just follow the guide i've put in readme and you should be fine
 // requires memcheck bypass
 
-template <typename addr = std::uintptr_t>
-constexpr std::uintptr_t aslr(const addr x) // omg, macros are bad so dont use it! -cumstain, around 2019 or 2020 idk
-{
-    return (x - 0x400000 + reinterpret_cast<const std::uintptr_t>(GetModuleHandleW(nullptr)));
-}
+// omg, you, like, shouldnt use 400k base, you know --iihero
+// omg, you, like, shouldnt use macros, you know -cumstain
+
+const auto base = reinterpret_cast<const std::uintptr_t>(GetModuleHandleA(nullptr));
 
 void bypass_trust_check()
 {
-        const auto patch_addr = aslr(0x1ABE4AF);
+        const auto patch_addr = (base + 0x1ABE4AF);
 	DWORD old;	
 
 	VirtualProtect(reinterpret_cast<void*>(patch_addr), 1, PAGE_EXECUTE_READWRITE, &old);
