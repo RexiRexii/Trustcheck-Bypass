@@ -1,7 +1,7 @@
 ## What is a Trustcheck?
 
 Roblox has a check to see if the URL that was inputted is trusted by them or not, this can be bypassed via 2 options.
-You can either use the Trustcheck1 / Trustcheck2 address (im sure this is patched) or you can use the JNZ address which requires a Memcheck bypass, this is the option that I've released
+You can either use the Trustcheck1 / Trustcheck2 address (im sure this is patched) or you can use a simple address which requires a Memcheck bypass, this is the option that I've released
 
 ## Grabbing the address
 Locate "Trust check failed" string in IDA, then find the patch, which in this case:
